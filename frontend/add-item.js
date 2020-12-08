@@ -137,24 +137,28 @@ const removeItem = function (e) {
 
 const editItem = function (e) {
   const textItem = e.target.parentElement.getElementsByClassName('item-text')[0];
+  console.log(textItem.innerText)
   const textInput = e.target.parentElement.getElementsByClassName('item-input')[0];
+  console.log(textInput.value)
   const editGroupButtons = e.target.parentElement.getElementsByClassName('btn-group-edit');
+  console.log(editGroupButtons)
   const saveGroupButtons = e.target.parentElement.getElementsByClassName('btn-group-save');
 
+  textInput.value = textItem.innerText;
   textItem.hidden = true;
   textInput.hidden = false;
 
-  for (i of editGroupButtons) {
+  for (let i of editGroupButtons) {
     i.hidden = true;
   }
 
-  for (i of saveGroupButtons) {
+  for (let i of saveGroupButtons) {
     i.hidden = false;
   }
-
-  textInput.value = textItem.innerText;
-
+  textItem.innerText = textInput.value
   textInput.select();
+
+  
 }
 
 const cancelItem = function (e) {
@@ -166,11 +170,11 @@ const cancelItem = function (e) {
   textItem.hidden = false;
   textInput.hidden = true;
 
-  for (i of editGroupButtons) {
+  for (let i of editGroupButtons) {
     i.hidden = false;
   }
 
-  for (i of saveGroupButtons) {
+  for (let i of saveGroupButtons) {
     i.hidden = true;
   }
 
@@ -188,11 +192,11 @@ const saveItem = function (e) {
   textItem.hidden = false;
   textInput.hidden = true;
 
-  for (i of editGroupButtons) {
+  for (let i of editGroupButtons) {
     i.hidden = false;
   }
 
-  for (i of saveGroupButtons) {
+  for (let i of saveGroupButtons) {
     i.hidden = true;
   }
   // Assign Text Input's value to Text Item's innerHTML
@@ -200,6 +204,34 @@ const saveItem = function (e) {
     alert('enter a value');
   } else {
     textItem.innerText = textInput.value;
+    const url = 'http://localhost:8080/api/todoitems' + e.target.parentElement.id
+
+      const data = {
+        title: textItem.innerText
+      }
+      let requestHeaders = {
+        "Content-Type": "application/json",
+      }
+      const postDetails = {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+        headers: requestHeaders
+      }
+
+      const postRequest = async () => {
+        try{
+          const response =  await fetch(url, postDetails);
+          if(response.ok){
+            let jsonResponse = await response.json();
+            
+          }
+        }
+        catch(error){
+          console.log(error);
+        }
+      }
+
+      postRequest();
   }
 }
 
